@@ -26,7 +26,7 @@
         <!-- navbar -->
         <nav class="navbar navbar-expand-lg" style="background-color: #102e44;">
             <div class="container-fluid">
-                <a href="home.php" class="navbar-brand">
+                <a href="index.php" class="navbar-brand">
                     <img src="./img/ATN-logo.png" alt="..." width="70px">
                 </a>
 

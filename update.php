@@ -1,59 +1,54 @@
 <?php
 require_once('header.php');
-require_once('connect.php');
+include_once('connect.php');
 $c = new Connect();
-$dbLink = $c->connectToMySQL();
+$blink = $c->ConnectToMySQL();
 
-if (isset($_POST['btnUpdate'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $proId = $_POST['proId'];
     $proName = $_POST['proName'];
     $proCat = $_POST['proCat'];
-    $importDate = date('Y-m-d', strtotime($_POST['importDate']));
     $originPrice = $_POST['oPrice'];
     $salePrice = $_POST['sPrice'];
+    $importDate = $_POST['importDate'];
     $supplierId = $_POST['supId'];
     $employeeId = $_POST['emId'];
+    $img = $_POST['img'];
 
-    $img = str_replace(' ', '-', $_FLIES['Pro_name']['name']);
-    $imgdir = './img/';
-    $flag = move_uploaded_file(
-        $_FILES['Pro_name']['tmp_name'],
-        $imgdir . $img
-    );
+    $sql = "UPDATE product SET 
+            product_id = '$proId',
+            product_name = '$proName',
+            product_cat = '$proCat',
+            origin_price = '$originPrice',
+            sale_price = '$salePrice',
+            date = '$importDate',
+            pro_img = '$img',
+            supplier_id = '$supplierId',
+            employee_id= '$supplier_id'
 
-    $sql = "UPDATE `product` SET
-                    `product_name` = $proname,
-                    `product_cat` = $proCat,
-                    `date` = $importDate,
-                    `pro_img` = $img,
-                    `origin_price` = $originPrice,
-                    `sale_price` = $salePrice 
-                    WHERE `product_id` = $proId";
-    
-    if($dbLink->query($sql) === TRUE) {
-        echo "Update successfull!";
-    }else{
-        echo "Faile!";
+            WHERE product_id = $proId";
+
+    if ($blink->query($sql) === true) {
+        echo "Update Successfully.";
+    } else {
+        echo "Error: " . $sql . "<br>" . $blink->error;
     }
 }
 
 $proId = $_GET['id'];
-$sql = "SELECT * FROM product p, supplier s, employee e WHERE p.supplier_id = s.supplier_id 
-        AND p.employee_id = e.employee_id AND product_id = $proId";
-// $re = $dbLink->prepare($sql);
-// $re->execute(array($proId));
-$re = $dbLink->query($sql);
-$re->fetch_assoc();
-?>
+$sql = "SELECT * FROM product WHERE product_id = '$proId'";
+$re = $blink->query($sql);
+$row = $re->fetch_assoc();
 
+?>
 <div class="container">
     <form action="#" class="form form-vertical" method="POST" enctype="multipart/form-data"> <!--multipart: upload file
         <!--Product ID-->
         <div class="row mb-3">
             <div class="col-12">
                 <label for="proId" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Product
-                    ID</label>
-                <input type="text" id="proId" name="proId" class="form-control" value="<?= $re['product_id'] ?>" required>
+                    Id</label>
+                <input type="text" id="proId" name="proId" class="form-control" value="<?= $row['product_id'] ?>">
             </div>
         </div>
 
@@ -62,7 +57,7 @@ $re->fetch_assoc();
             <div class="col-12">
                 <label for="proName" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Product
                     Name</label>
-                <input type="text" id="proName" name="proName" class="form-control" value="" placeholder="Product Name">
+                <input type="text" id="proName" name="proName" class="form-control" value="" required>
             </div>
         </div>
 
@@ -143,8 +138,11 @@ $re->fetch_assoc();
         <!--Button-->
         <div class="row mb-3">
             <div class="col-2 ms-auto row">
-                <div class="d-grid mx-auto">
-                    <button type="submit" name="btnUpdate" class="btn btn-success rounded-pill">Update</button>
+                <div class="col-6 d-grid mx-auto">
+                    <button type="submit" name="btnAdd" class="btn btn-warning rounded-pill">Add</button>
+                </div>
+                <div class="col-6 d-grid mx-auto">
+                    <button type="reset" name="btnReset" class="btn btn-secondary rounded-pill">Reset</button>
                 </div>
             </div>
         </div>
