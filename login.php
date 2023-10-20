@@ -18,7 +18,7 @@ if (isset($_POST['btnLogin'])) {
         if ($numrow == 1) {
             echo "Login successfully!";
             $_SESSION['account'] = $row['account'];
-            header("Location: home.php");
+            header("Location: index.php");
         } else {
             echo "Something wrong with your info<br>";
         }
