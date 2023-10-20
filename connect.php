@@ -34,7 +34,7 @@ class Connect
     function connectToPDO(): PDO
     {
         try {
-            $conn = new PDO("mysql://nfj6474jfksqq86q:aj7ytel7ko2a56xa@en1ehf30yom7txe7.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lpwxwl4lo5jsitdw=$this->server;dbname=$this->dbName", $this->username, $this->password);
+            $conn = new PDO("mysql:host=$this->server;dbname=$this->dbName", $this->username, $this->password);
             //echo "Connect! PDO";
         } catch (PDOException $e) {
             die("Failed " . $e);
