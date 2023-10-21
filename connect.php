@@ -15,7 +15,7 @@ class Connect
 
         $this->server = 'ckshdphy86qnz0bj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
         $this->dbName = 'adzaj04scixhvgtk';
-        $this->username = 'adzaj04scixhvgtk';
+        $this->username = 'w82gjnru7u4hcchx';
         $this->password = 'ue71oory7a2g2c0i';
     }
 
