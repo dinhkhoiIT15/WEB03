@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             date = '$importDate',
             pro_img = '$img',
             supplier_id = '$supplierId',
-            employee_id= '$supplier_id'
+            employee_id= '$employeeId'
 
             WHERE product_id = $proId";
 
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$proId = $_GET['id'];
-$sql = "SELECT * FROM product WHERE product_id = '$proId'";
+$pro_id = $_GET['id'];
+$sql = "SELECT * FROM product p, employee e, supplier s, category c WHERE p.product_cat = c.cat_id AND p.employee_id = e.employee_id AND p.supplier_id = s.supplier_id AND product_id ='$pro_id'";
 $re = $blink->query($sql);
 $row = $re->fetch_assoc();
 
@@ -48,7 +48,8 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="proId" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Product
                     Id</label>
-                <input type="text" id="proId" name="proId" class="form-control" value="<?= $row['product_id'] ?>">
+                <input type="text" id="proId" name="proId" class="form-control" value="<?= $row['product_id'] ?>"
+                    placeholder="Product ID" required>
             </div>
         </div>
 
@@ -57,7 +58,8 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="proName" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Product
                     Name</label>
-                <input type="text" id="proName" name="proName" class="form-control" value="" required>
+                <input type="text" id="proName" name="proName" class="form-control" value="<?= $row['product_name'] ?>"
+                    placeholder="Product name" required>
             </div>
         </div>
 
@@ -65,9 +67,9 @@ $row = $re->fetch_assoc();
         <div class="row mb-3">
             <div class="col-12">
                 <label for="proCat" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Product
-                    Name</label>
-                <select name="proCat" id="proCat" class="form-select">
-                    <option selected>Product Category</option>
+                    Category</label>
+                    <select name="proCat" id="proCat" class="form-select">
+                    <option selected value="<?=$row['cat_id']?>"><?=$row['cat_name']?></option>
                     <option value="1">Lego</option>
                     <option value="2">Rubik</option>
                 </select>
@@ -79,7 +81,8 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="oPrice" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Origin
                     Price</label>
-                <input type="text" id="oPrice" name="oPrice" class="form-control" value="" placeholder="Origin Price">
+                <input type="text" id="oPrice" name="oPrice" class="form-control" value="<?= $row['origin_price'] ?>"
+                    placeholder="Origin Price" required>
             </div>
         </div>
 
@@ -87,7 +90,8 @@ $row = $re->fetch_assoc();
         <div class="row mb-3">
             <div class="col-12">
                 <label for="sPrice" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Sale Price</label>
-                <input type="text" id="sPrice" name="sPrice" class="form-control" value="" placeholder="Sale Price">
+                <input type="text" id="sPrice" name="sPrice" class="form-control" value="<?= $row['sale_price'] ?>"
+                    placeholder="Sale Price" required>
             </div>
         </div>
 
@@ -96,8 +100,8 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="importDate" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Import
                     date</label>
-                <input type="date" id="importDate" name="importDate" class="form-control" value=""
-                    placeholder="Import date">
+                <input type="date" id="importDate" name="importDate" class="form-control" value="<?= $row['date'] ?>"
+                    placeholder="Import date" required>
             </div>
         </div>
 
@@ -106,7 +110,7 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <div class="form-group">
                     <label for="image-vertical" style="font-weight: bold; color: cornflowerblue">Image</label>
-                    <input type="file" name="Pro_image" id="Pro_image" class="form-control" value="">
+                    <input type="text" name="img" id="img" class="form-control" value="<?= $row['pro_img'] ?>" required>
                 </div>
             </div>
         </div>
@@ -116,9 +120,9 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="supId" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Supplier</label>
                 <select name="supId" id="supId" class="form-select">
-                    <option selected>Supplier</option>
-                    <option value="1">Lego industry</option>
-                    <option value="2">Rubik company</option>
+                    <option selected value="<?=$row['supplier_id']?>"><?=$row['supplier_name']?></option>
+                    <option value="1">Lego Industry</option>
+                    <option value="2">Rubik Company</option>
                 </select>
             </div>
         </div>
@@ -128,7 +132,7 @@ $row = $re->fetch_assoc();
             <div class="col-12">
                 <label for="emId" class="col-sm-2" style="font-weight: bold; color:cornflowerblue">Employee</label>
                 <select name="emId" id="emId" class="form-select">
-                    <option selected>Employee</option>
+                    <option selected value="<?=$row['employee_id']?>"><?=$row['employee_name']?></option>
                     <option value="1">Dinh Dinh Khoi</option>
                     <option value="2">Pham Vo Nhut Truong</option>
                 </select>
@@ -137,17 +141,24 @@ $row = $re->fetch_assoc();
 
         <!--Button-->
         <div class="row mb-3">
-            <div class="col-2 ms-auto row">
-                <div class="col-6 d-grid mx-auto">
-                    <button type="submit" name="btnAdd" class="btn btn-warning rounded-pill">Add</button>
-                </div>
-                <div class="col-6 d-grid mx-auto">
-                    <button type="reset" name="btnReset" class="btn btn-secondary rounded-pill">Reset</button>
+            <div class="col-2 mx-auto row">
+                <div class="d-grid mx-auto">
+                    <button type="submit" name="btnAdd" class="btn btn-success rounded-pill">Add</button>
                 </div>
             </div>
         </div>
     </form>
+
+    <div class="pt-5">
+            <h6 class="mb-0">
+                <a href="index.php" class="text-body text-decoration-none px-5">
+                    <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
+                </a>
+            </h6>
+        </div>
 </div>
+
+
 
 <?php
 require_once('footer.php');

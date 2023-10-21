@@ -27,7 +27,7 @@ if (isset($_GET['del_id'])) {
         $pid = $_GET['id'];
         $conn = new Connect();
         $dbLink = $conn->connectToPDO();
-        $sql = "SELECT * FROM product p, supplier s, employee e WHERE p.supplier_id = s.supplier_id AND p.employee_id = e.employee_id AND product_id=?";
+        $sql = "SELECT * FROM product p, supplier s, employee e, category c WHERE c.cat_id = p.product_cat AND p.supplier_id = s.supplier_id AND p.employee_id = e.employee_id AND product_id=?";
         $stmt = $dbLink->prepare($sql);
         $stmt->execute(array($pid));
         $re = $stmt->fetch(PDO::FETCH_BOTH);
@@ -40,7 +40,12 @@ if (isset($_GET['del_id'])) {
                 <h2 class="text-center" style="color: blue;">
                     <?= $re['product_name'] ?>
                 </h2>
-
+                ID: 
+                <?= $re['product_id'] ?>
+                <br>
+                Category:
+                <?=$re['cat_name']?>
+                <br>
                 Price:
                 <?= $re['sale_price'] ?>&#8363;
                 <br>
@@ -58,7 +63,7 @@ if (isset($_GET['del_id'])) {
             </div>
 
             <button type="submit" name="btnUpdate" class="btn btn-success my-3 mx-auto">
-                <a href="update.php?id" class="text-decoration-none text-white">Update <i class="fa-solid fa-pen-to-square"></i></i></a>
+                <a href="update.php?id=<?=$re['product_id']?>" class="text-decoration-none text-white">Update <i class="fa-solid fa-pen-to-square"></i></i></a>
             </button>
             <button type="submit" name="btnDelete" class="btn btn-danger my-3 mx-auto">
                 <a href="?del_id=<?= $re['product_id'] ?>" class="text-decoration-none text-white">Delete
@@ -68,7 +73,7 @@ if (isset($_GET['del_id'])) {
         </div>
         <div class="pt-5">
             <h6 class="mb-0">
-                <a href="home.php" class="text-body text-decoration-none px-5">
+                <a href="index.php" class="text-body text-decoration-none px-5">
                     <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
                 </a>
             </h6>
@@ -78,6 +83,13 @@ if (isset($_GET['del_id'])) {
     else:
         ?>
         <h2>Nothing to show</h2>
+        <div class="pt-5">
+            <h6 class="mb-0">
+                <a href="index.php" class="text-body text-decoration-none px-5">
+                    <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
+                </a>
+            </h6>
+        </div>
         <?php
     endif;
     ?>
